@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRONLY - Premium Restaurant Management Platform</title>
+    <meta name="description" content="Transform your restaurant operations with intelligent reservations, table management, and analytics. Trusted by 2,500+ restaurants worldwide.">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/landing-v2.css">
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">B</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <div class="container nav-container">
+            <a href="#" class="nav-logo">
+                <div class="nav-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                </div>
+                <span class="nav-logo-text">BRONLY</span>
+            </a>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#features" class="nav-link" data-scroll>Features</a>
+                <a href="#how-it-works" class="nav-link" data-scroll>How it Works</a>
+                <a href="#pricing" class="nav-link" data-scroll>Pricing</a>
+                <a href="#testimonials" class="nav-link" data-scroll>Reviews</a>
+                <a href="#faq" class="nav-link" data-scroll>FAQ</a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="login.html" class="nav-link nav-link-ghost">Sign In</a>
+                <a href="register.html" class="btn btn-primary btn-sm">Start Free Trial</a>
+            </div>
+            
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+                <span class="nav-toggle-line"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-background">
+            <canvas id="heroCanvas" class="hero-canvas"></canvas>
+            <div class="hero-gradient-overlay"></div>
+            <div class="hero-grid-pattern"></div>
+        </div>
+        
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="hero-badge-dot"></span>
+                    <span>Now with AI-Powered Optimization</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    <span class="hero-title-line">Run Your Restaurant</span>
+                    <span class="hero-title-line hero-title-accent">Like a Pro</span>
+                </h1>
+                
+                <p class="hero-description">
+                    The all-in-one platform that helps restaurant owners streamline reservations, 
+                    optimize table turnover, and boost revenue with intelligent analytics.
+                </p>
+                
+                <div class="hero-cta">
+                    <a href="register.html" class="btn btn-primary btn-lg hero-btn-primary">
+                        Start 14-Day Free Trial
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#features" class="btn btn-outline btn-lg" data-scroll>
+                        Explore Features
+                    </a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" data-count="2500">0</span>
+                        <span class="hero-stat-suffix">+</span>
+                        <span class="hero-stat-label">Restaurants</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" data-count="30">0</span>
+                        <span class="hero-stat-suffix">%</span>
+                        <span class="hero-stat-label">Revenue Boost</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" data-count="99.9">0</span>
+                        <span class="hero-stat-suffix">%</span>
+                        <span class="hero-stat-label">Uptime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="hero-dashboard">
+                    <div class="dashboard-frame">
+                        <div class="dashboard-header">
+                            <div class="dashboard-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="dashboard-title">BRONLY Dashboard</div>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="dashboard-card">
+                                <div class="card-label">Today's Revenue</div>
+                                <div class="card-value">$4,280</div>
+                                <div class="card-trend positive">+12.5%</div>
+                            </div>
+                            <div class="dashboard-card">
+                                <div class="card-label">Reservations</div>
+                                <div class="card-value">47</div>
+                                <div class="card-trend positive">+8.3%</div>
+                            </div>
+                            <div class="dashboard-card">
+                                <div class="card-label">Table Turnover</div>
+                                <div class="card-value">3.2x</div>
+                                <div class="card-trend positive">+15%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-glow"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span class="scroll-text">Scroll to explore</span>
+        </div>
+    </section>
+
+    <!-- Social Proof Bar -->
+    <section class="social-proof">
+        <div class="container">
+            <p class="social-proof-text">Trusted by leading restaurants worldwide</p>
+            <div class="social-proof-logos">
+                <div class="logo-item">The Grand Bistro</div>
+                <div class="logo-item">Ocean View</div>
+                <div class="logo-item">Metro Dining</div>
+                <div class="logo-item">Harvest Table</div>
+                <div class="logo-item">Urban Kitchen</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Features</span>
+                <h2 class="section-title">Everything You Need to<br>Succeed</h2>
+                <p class="section-subtitle">
+                    Powerful tools designed specifically for restaurant owners to manage operations, 
+                    increase efficiency, and grow revenue.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-reveal>
+                    <div class="feature-icon-wrap">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Smart Reservations</h3>
+                    <p class="feature-description">
+                        AI-powered booking system that automatically optimizes table allocation, 
+                        predicts no-shows with 95% accuracy, and maximizes seating efficiency.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Automated waitlist management</li>
+                        <li>SMS & email confirmations</li>
+                        <li>Overbooking protection</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" data-reveal>
+                    <div class="feature-icon-wrap">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5"/>
+                                <path d="M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Visual Table Manager</h3>
+                    <p class="feature-description">
+                        Interactive floor plan with real-time status updates. Drag-and-drop table 
+                        management, easy combining, and instant status changes.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Real-time table status</li>
+                        <li>Smart table combining</li>
+                        <li>Section management</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" data-reveal>
+                    <div class="feature-icon-wrap">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"/>
+                                <line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Advanced Analytics</h3>
+                    <p class="feature-description">
+                        Comprehensive insights into revenue, customer behavior, peak hours, and 
+                        staff performance. Make data-driven decisions with confidence.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Revenue forecasting</li>
+                        <li>Customer insights</li>
+                        <li>Performance metrics</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" data-reveal>
+                    <div class="feature-icon-wrap">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 010 7.75"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Guest Management</h3>
+                    <p class="feature-description">
+                        Build detailed guest profiles with preferences, allergies, visit history, 
+                        and special occasions. Deliver personalized experiences at scale.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Preference tracking</li>
+                        <li>VIP recognition</li>
+                        <li>Automated notes</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" data-reveal>
+                    <div class="feature-icon-wrap">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">POS Integration</h3>
+                    <p class="feature-description">
+                        Seamlessly connect with your existing POS system. Automatic bill syncing, 
+                        payment tracking, and unified reporting across platforms.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Automatic bill sync</li>
+                        <li>Revenue reconciliation</li>
+                        <li>30+ POS integrations</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card" data-reveal>
+                    <div class="feature-icon-wrap">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="2" y1="12" x2="22" y2="12"/>
+                                <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="feature-title">Online Presence</h3>
+                    <p class="feature-description">
+                        Custom booking widget for your website, Google integration, and social media 
+                        connectivity. Attract diners where they discover restaurants.
+                    </p>
+                    <ul class="feature-list">
+                        <li>Booking widget</li>
+                        <li>Google integration</li>
+                        <li>Review management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Process</span>
+                <h2 class="section-title">Get Started in Minutes</h2>
+                <p class="section-subtitle">
+                    Simple setup process designed to get you up and running quickly
+                </p>
+            </div>
+            
+            <div class="process-steps">
+                <div class="process-step" data-reveal>
+                    <div class="step-number-large">01</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Set Up Your Venue</h3>
+                        <p class="step-description">
+                            Create your restaurant profile, upload your floor plan, and configure 
+                            your table layout. Our smart wizard guides you through every step.
+                        </p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step" data-reveal>
+                    <div class="step-number-large">02</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Configure Settings</h3>
+                        <p class="step-description">
+                            Set your hours, reservation policies, and notification preferences. 
+                            Connect your POS and staff accounts in just a few clicks.
+                        </p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 17.66l-4.24 4.24M23 12h-6m-6 0H1m20.24 4.24l-4.24-4.24M6.34 6.34L2.1 2.1"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="process-step" data-reveal>
+                    <div class="step-number-large">03</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Start Taking Bookings</h3>
+                        <p class="step-description">
+                            Go live and start accepting reservations immediately. Use our analytics 
+                            to optimize operations and watch your revenue grow.
+                        </p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="step-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guest Integration Teaser -->
+    <section class="guest-teaser">
+        <div class="container">
+            <div class="guest-teaser-content">
+                <div class="guest-teaser-text">
+                    <h3 class="guest-teaser-title">Your Guests Book Directly</h3>
+                    <p class="guest-teaser-description">
+                        While BRONLY is built for restaurant owners, your guests enjoy a seamless 
+                        booking experience. No third-party fees, no commissions—just direct reservations 
+                        that build your customer relationships.
+                    </p>
+                    <div class="guest-teaser-stats">
+                        <div class="teaser-stat">
+                            <span class="teaser-value">0%</span>
+                            <span class="teaser-label">Commission Fees</span>
+                        </div>
+                        <div class="teaser-stat">
+                            <span class="teaser-value">24/7</span>
+                            <span class="teaser-label">Booking Available</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="guest-teaser-visual">
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="phone-header">
+                                <span>Book a Table</span>
+                            </div>
+                            <div class="phone-content">
+                                <div class="phone-restaurant">
+                                    <div class="phone-img"></div>
+                                    <div class="phone-info">
+                                        <div class="phone-name">The Grand Bistro</div>
+                                        <div class="phone-rating">★★★★★ 4.9</div>
+                                    </div>
+                                </div>
+                                <div class="phone-form">
+                                    <div class="phone-field">
+                                        <span>Guests</span>
+                                        <strong>4 People</strong>
+                                    </div>
+                                    <div class="phone-field">
+                                        <span>Date</span>
+                                        <strong>Today, 7:00 PM</strong>
+                                    </div>
+                                </div>
+                                <div class="phone-button">Confirm Booking</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Pricing</span>
+                <h2 class="section-title">Simple, Transparent Pricing</h2>
+                <p class="section-subtitle">
+                    Choose the plan that fits your restaurant. No hidden fees, no surprises.
+                </p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card" data-reveal>
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Starter</h3>
+                        <p class="pricing-description">Perfect for small restaurants</p>
+                        <div class="pricing-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-value">49</span>
+                            <span class="price-period">/month</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            1 Restaurant Location
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Up to 25 Tables
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            500 Reservations/month
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Basic Analytics
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Email Support
+                        </li>
+                    </ul>
+                    <a href="register.html" class="btn btn-outline w-full">Get Started</a>
+                </div>
+                
+                <div class="pricing-card pricing-popular" data-reveal>
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Professional</h3>
+                        <p class="pricing-description">For growing restaurants</p>
+                        <div class="pricing-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-value">149</span>
+                            <span class="price-period">/month</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Up to 5 Locations
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Unlimited Tables
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Unlimited Reservations
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Advanced Analytics & AI
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            POS Integration
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Priority Support
+                        </li>
+                    </ul>
+                    <a href="register.html" class="btn btn-primary w-full">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card" data-reveal>
+                    <div class="pricing-header">
+                        <h3 class="pricing-name">Enterprise</h3>
+                        <p class="pricing-description">For restaurant groups</p>
+                        <div class="pricing-price">
+                            <span class="price-custom">Custom</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Unlimited Locations
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Custom Integrations
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Dedicated Account Manager
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            SLA & 99.99% Uptime
+                        </li>
+                        <li class="pricing-feature">
+                            <svg class="feature-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Custom Training
+                        </li>
+                    </ul>
+                    <a href="mailto:sales@bronly.io" class="btn btn-outline w-full">Contact Sales</a>
+                </div>
+            </div>
+            
+            <div class="pricing-guarantee">
+                <svg class="guarantee-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <span class="guarantee-text">14-day free trial • No credit card required • Cancel anytime</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Testimonials</span>
+                <h2 class="section-title">Loved by Restaurant Owners</h2>
+                <p class="section-subtitle">
+                    See why thousands of restaurants choose BRONLY
+                </p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card" data-reveal>
+                    <div class="testimonial-rating">★★★★★</div>
+                    <blockquote class="testimonial-quote">
+                        "BRONLY completely transformed how we manage reservations. Our table turnover 
+                        increased by 30% in the first month alone. The ROI was immediate."
+                    </blockquote>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SC</div>
+                        <div class="author-info">
+                            <div class="author-name">Sarah Chen</div>
+                            <div class="author-title">Owner, The Golden Spoon</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card" data-reveal>
+                    <div class="testimonial-rating">★★★★★</div>
+                    <blockquote class="testimonial-quote">
+                        "The analytics dashboard is a game-changer. We finally understand our peak 
+                        hours and can staff accordingly. It's like having a data analyst on the team."
+                    </blockquote>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">MR</div>
+                        <div class="author-info">
+                            <div class="author-name">Michael Rodriguez</div>
+                            <div class="author-title">Manager, Bella Vista</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card" data-reveal>
+                    <div class="testimonial-rating">★★★★★</div>
+                    <blockquote class="testimonial-quote">
+                        "Setup took 10 minutes. Our staff learned it in one day. Now we spend less 
+                        time on the phone and more time creating amazing dining experiences."
+                    </blockquote>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">EJ</div>
+                        <div class="author-info">
+                            <div class="author-name">Emma Johnson</div>
+                            <div class="author-title">Director, Coastal Dining Group</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">FAQ</span>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">
+                    Everything you need to know about getting started
+                </p>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item" data-reveal>
+                    <button class="faq-question">
+                        <span>How does the 14-day free trial work?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Start with full access to all Professional features for 14 days. No credit 
+                            card required. At the end of your trial, choose the plan that works best 
+                            for your restaurant or continue with our free tier.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-reveal>
+                    <button class="faq-question">
+                        <span>Can I switch plans at any time?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Absolutely! You can upgrade or downgrade your plan at any time. Changes 
+                            take effect immediately, and we'll prorate any difference in cost. You're 
+                            never locked into a contract.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-reveal>
+                    <button class="faq-question">
+                        <span>What POS systems do you integrate with?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            BRONLY integrates with 30+ popular POS systems including Toast, Square, 
+                            Clover, Lightspeed, and many more. Don't see your POS? Contact us and 
+                            we'll work on adding it to our integration list.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-reveal>
+                    <button class="faq-question">
+                        <span>Is my data secure?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Security is our top priority. We use bank-level 256-bit SSL encryption, 
+                            store data in SOC 2 Type II certified data centers, and are fully GDPR 
+                            compliant. Your customer data is never sold or shared with third parties.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-reveal>
+                    <button class="faq-question">
+                        <span>Do you charge commission on reservations?</span>
+                        <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Never! Unlike third-party booking platforms, BRONLY is a flat monthly 
+                            subscription. You keep 100% of your revenue from every reservation. No 
+                            hidden fees, no commission percentages.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Transform Your Restaurant?</h2>
+                <p class="cta-description">
+                    Join 2,500+ restaurants already using BRONLY to streamline operations 
+                    and increase revenue. Start your free trial today.
+                </p>
+                <div class="cta-buttons">
+                    <a href="register.html" class="btn btn-primary btn-lg">
+                        Start Free Trial
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="mailto:sales@bronly.io" class="btn btn-outline btn-lg">
+                        Talk to Sales
+                    </a>
+                </div>
+                <p class="cta-note">No credit card required • 14-day free trial • Cancel anytime</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                        </div>
+                        <span class="footer-logo-text">BRONLY</span>
+                    </a>
+                    <p class="footer-description">
+                        The modern restaurant management platform that helps you deliver 
+                        exceptional dining experiences.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#faq">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">API Reference</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4 class="footer-title">Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a href="#">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2024 BRONLY. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts - Regular (not ES6 modules) for file:// compatibility -->
+    <script src="js/webgl-hero.js"></script>
+    <script src="js/landing-v2.js"></script>
+</body>
+</html>

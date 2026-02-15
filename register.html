@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - BRONLY</title>
+    <meta name="description" content="Create your BRONLY account">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            background: var(--color-bg-primary);
+        }
+        
+        .auth-visual {
+            flex: 1;
+            background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-12);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-visual::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(252, 163, 17, 0.1) 0%, transparent 70%);
+        }
+        
+        .auth-visual-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 400px;
+        }
+        
+        .auth-visual-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+            font-size: var(--text-2xl);
+            font-weight: 800;
+            margin-bottom: var(--space-8);
+        }
+        
+        .auth-visual-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-accent);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-visual-title {
+            font-size: var(--text-4xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            line-height: 1.2;
+        }
+        
+        .auth-visual-subtitle {
+            font-size: var(--text-lg);
+            color: var(--color-text-secondary);
+        }
+        
+        .auth-form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--space-8);
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .auth-form-wrapper {
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .step-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+        
+        .step-number {
+            font-size: var(--text-sm);
+            font-weight: 700;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-2);
+        }
+        
+        .step-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        
+        .step-subtitle {
+            font-size: var(--text-base);
+            color: var(--color-text-secondary);
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-5);
+        }
+        
+        .auth-name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-4);
+        }
+        
+        .form-floating {
+            position: relative;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--space-4) var(--space-4);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            color: var(--color-text-primary);
+            font-size: var(--text-base);
+            font-family: inherit;
+            transition: all var(--transition-fast);
+            outline: none;
+        }
+        
+        .form-input:focus {
+            border-color: var(--color-accent);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(252, 163, 17, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: transparent;
+        }
+        
+        .form-label {
+            position: absolute;
+            left: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-secondary);
+            font-size: var(--text-base);
+            pointer-events: none;
+            transition: all var(--transition-fast);
+            background: transparent;
+            padding: 0 var(--space-1);
+        }
+        
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: 0;
+            transform: translateY(-50%) scale(0.85);
+            color: var(--color-accent);
+            background: var(--color-bg-primary);
+        }
+        
+        .form-input:-webkit-autofill,
+        .form-input:-webkit-autofill:hover,
+        .form-input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--color-text-primary);
+            -webkit-box-shadow: 0 0 0px 1000px var(--color-bg-secondary) inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+        
+        .password-strength {
+            margin-top: var(--space-2);
+        }
+        
+        .strength-bar {
+            height: 4px;
+            background: var(--color-glass);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0;
+            background: var(--color-error);
+            transition: all var(--transition-base);
+        }
+        
+        .strength-fill.weak { width: 25%; background: var(--color-error); }
+        .strength-fill.fair { width: 50%; background: var(--color-warning); }
+        .strength-fill.good { width: 75%; background: #3B82F6; }
+        .strength-fill.strong { width: 100%; background: var(--color-success); }
+        
+        .strength-text {
+            font-size: var(--text-xs);
+            color: var(--color-text-muted);
+            margin-top: var(--space-1);
+        }
+        
+        .btn-submit {
+            width: 100%;
+            margin-top: var(--space-4);
+        }
+        
+        .success-message {
+            text-align: center;
+            padding: var(--space-8);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-6);
+            animation: successPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes successPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .error-message {
+            color: var(--color-error);
+            font-size: var(--text-sm);
+            margin-top: var(--space-1);
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .form-input.error {
+            border-color: var(--color-error);
+        }
+        
+        .auth-back {
+            position: absolute;
+            top: var(--space-6);
+            left: var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--color-text-secondary);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            cursor: pointer;
+        }
+        
+        .auth-back:hover {
+            color: var(--color-text-primary);
+        }
+        
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--space-8);
+            padding-top: var(--space-8);
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .auth-footer p {
+            color: var(--color-text-muted);
+            font-size: var(--text-sm);
+        }
+        
+        .auth-footer a {
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .auth-visual {
+                display: none;
+            }
+            
+            .auth-form-container {
+                padding: var(--space-6);
+            }
+            
+            .auth-name-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <!-- Left Side Visual -->
+        <div class="auth-visual">
+            <div class="auth-visual-content">
+                <div class="auth-visual-logo">
+                    <div class="auth-visual-logo-icon">B</div>
+                    <span>BRONLY</span>
+                </div>
+                <h2 class="auth-visual-title">Start Your Free Trial</h2>
+                <p class="auth-visual-subtitle">Join thousands of restaurants using BRONLY to streamline operations</p>
+            </div>
+        </div>
+        
+        <!-- Right Side Form -->
+        <div class="auth-form-container">
+            <div class="auth-back" onclick="window.location.href='/'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to home
+            </div>
+            
+            <div class="auth-form-wrapper">
+                <div id="registration-form">
+                    <div class="step-header">
+                        <div class="step-number">Get Started</div>
+                        <h1 class="step-title">Create Your Account</h1>
+                        <p class="step-subtitle">Start your 14-day free trial today</p>
+                    </div>
+                    
+                    <form class="auth-form" id="signup-form">
+                        <div class="auth-name-row">
+                            <div class="form-floating">
+                                <input type="text" class="form-input" id="firstName" name="firstName" placeholder=" " required>
+                                <label class="form-label" for="firstName">First Name</label>
+                                <div class="error-message" id="firstName-error">Please enter your first name</div>
+                            </div>
+                            <div class="form-floating">
+                                <input type="text" class="form-input" id="lastName" name="lastName" placeholder=" " required>
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <div class="error-message" id="lastName-error">Please enter your last name</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="email" class="form-input" id="email" name="email" placeholder=" " required>
+                            <label class="form-label" for="email">Email Address</label>
+                            <div class="error-message" id="email-error">Please enter a valid email</div>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="password" class="form-input" id="password" name="password" placeholder=" " required minlength="8">
+                            <label class="form-label" for="password">Password</label>
+                            <div class="password-strength">
+                                <div class="strength-bar">
+                                    <div class="strength-fill" id="strength-fill"></div>
+                                </div>
+                                <div class="strength-text" id="strength-text">Enter at least 8 characters</div>
+                            </div>
+                            <div class="error-message" id="password-error">Password must be at least 8 characters</div>
+                        </div>
+                        
+                        <div class="form-floating">
+                            <input type="password" class="form-input" id="confirmPassword" name="confirmPassword" placeholder=" " required>
+                            <label class="form-label" for="confirmPassword">Confirm Password</label>
+                            <div class="error-message" id="confirmPassword-error">Passwords do not match</div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg btn-submit" id="submit-btn">
+                            Create Account
+                        </button>
+                    </form>
+                </div>
+                
+                <div id="success-view" style="display: none;">
+                    <div class="success-message">
+                        <div class="success-icon">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <h2 class="step-title">Welcome Aboard!</h2>
+                        <p class="step-subtitle">Your account has been created successfully</p>
+                        <p style="color: var(--color-text-secondary); margin: var(--space-4) 0;">
+                            You're all set to start managing your restaurant with BRONLY.
+                        </p>
+                        <button onclick="window.location.href='dashboard.html'" class="btn btn-primary btn-lg" style="width: 100%;">
+                            Go to Dashboard
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 8px;">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="login.html">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Mock register function
+        function mockRegister(userData) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const user = {
+                        id: Date.now(),
+                        email: userData.email,
+                        first_name: userData.first_name,
+                        last_name: userData.last_name,
+                        role: 'restaurant_owner',
+                        avatar: null,
+                        created_at: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('access_token', 'mock_token_' + Date.now());
+                    
+                    resolve({ success: true, user: user });
+                }, 1000);
+            });
+        }
+        
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthFill = document.getElementById('strength-fill');
+        const strengthText = document.getElementById('strength-text');
+        
+        passwordInput.addEventListener('input', (e) => {
+            const password = e.target.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/\d/)) strength++;
+            if (password.match(/[^a-zA-Z\d]/)) strength++;
+            
+            strengthFill.className = 'strength-fill';
+            
+            if (password.length === 0) {
+                strengthText.textContent = 'Enter at least 8 characters';
+            } else if (strength === 1) {
+                strengthFill.classList.add('weak');
+                strengthText.textContent = 'Weak password';
+            } else if (strength === 2) {
+                strengthFill.classList.add('fair');
+                strengthText.textContent = 'Fair password';
+            } else if (strength === 3) {
+                strengthFill.classList.add('good');
+                strengthText.textContent = 'Good password';
+            } else {
+                strengthFill.classList.add('strong');
+                strengthText.textContent = 'Strong password';
+            }
+        });
+        
+        // Form validation
+        function validateForm() {
+            let valid = true;
+            
+            // First name
+            const firstName = document.getElementById('firstName');
+            if (!firstName.value.trim()) {
+                showError('firstName');
+                valid = false;
+            } else {
+                hideError('firstName');
+            }
+            
+            // Last name
+            const lastName = document.getElementById('lastName');
+            if (!lastName.value.trim()) {
+                showError('lastName');
+                valid = false;
+            } else {
+                hideError('lastName');
+            }
+            
+            // Email
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                showError('email');
+                valid = false;
+            } else {
+                hideError('email');
+            }
+            
+            // Password
+            const password = document.getElementById('password');
+            if (password.value.length < 8) {
+                showError('password');
+                valid = false;
+            } else {
+                hideError('password');
+            }
+            
+            // Confirm password
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (confirmPassword.value !== password.value) {
+                showError('confirmPassword');
+                valid = false;
+            } else {
+                hideError('confirmPassword');
+            }
+            
+            return valid;
+        }
+        
+        function showError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + '-error');
+            field.classList.add('error');
+            error.classList.add('show');
+        }
+        
+        function hideError(fieldId) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + '-error');
+            field.classList.remove('error');
+            error.classList.remove('show');
+        }
+        
+        // Hide errors on input
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('error');
+                const error = document.getElementById(this.id + '-error');
+                if (error) error.classList.remove('show');
+            });
+        });
+        
+        // Form submission
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading"></span>';
+            submitBtn.disabled = true;
+            
+            try {
+                const result = await mockRegister({
+                    first_name: document.getElementById('firstName').value,
+                    last_name: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                    role: 'restaurant_owner'
+                });
+                
+                if (result.success) {
+                    document.getElementById('registration-form').style.display = 'none';
+                    document.getElementById('success-view').style.display = 'block';
+                }
+            } catch (error) {
+                alert('Registration failed. Please try again.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
