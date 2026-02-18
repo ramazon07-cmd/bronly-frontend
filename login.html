@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth-effects.css">
     <style>
         .auth-page {
             min-height: 100vh;
@@ -233,6 +234,22 @@
     </style>
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">B</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+    
     <div class="auth-page">
         <div class="auth-visual">
             <div class="auth-visual-content">
@@ -301,25 +318,6 @@
                     </button>
                 </div>
                 
-                <!-- Demo Credentials -->
-                <div style="margin-top: 24px; padding: 16px; background: var(--color-glass-light); border-radius: var(--radius-lg); border: 1px solid var(--color-border);">
-                    <p style="font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Demo Accounts</p>
-                    <div style="display: grid; gap: 8px; font-size: var(--text-sm);">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: var(--color-text-secondary);">👔 Admin:</span>
-                            <code style="background: var(--color-glass); padding: 2px 8px; border-radius: 4px; font-family: monospace;">admin@bronly.io / admin123456</code>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: var(--color-text-secondary);">🏪 Owner:</span>
-                            <code style="background: var(--color-glass); padding: 2px 8px; border-radius: 4px; font-family: monospace;">demo@bronly.io / demo123456</code>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: var(--color-text-secondary);">👨‍🍳 Staff:</span>
-                            <code style="background: var(--color-glass); padding: 2px 8px; border-radius: 4px; font-family: monospace;">staff@bronly.io / staff123456</code>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="auth-footer">
                     <p>Don't have an account? <a href="register.html">Sign up</a></p>
                 </div>
@@ -353,5 +351,6 @@
             }
         });
     </script>
+    <script src="js/auth-effects.js"></script>
 </body>
 </html>

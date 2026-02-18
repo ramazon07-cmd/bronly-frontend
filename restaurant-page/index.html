@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book your table and explore our menu">
+    <title>Bronly | Restaurant Name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/auth-effects.css">
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">B</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+
+    <!-- Sticky Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <div class="logo">
+                <span class="logo-text">Bronly</span>
+            </div>
+            <nav class="nav-desktop">
+                <a href="#info" class="nav-link">Info</a>
+                <a href="#menu" class="nav-link">Menu</a>
+                <a href="#booking" class="nav-link">Book Table</a>
+            </nav>
+            <button class="btn btn-primary btn-small nav-cta" onclick="scrollToBooking()">
+                Reserve Now
+            </button>
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <nav class="mobile-nav">
+            <a href="#info" class="mobile-nav-link">Info</a>
+            <a href="#menu" class="mobile-nav-link">Menu</a>
+            <a href="#booking" class="mobile-nav-link">Book Table</a>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="restaurant-logo">
+                <div class="logo-placeholder">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2C8.5 2 6 4.5 6 7c0 2.5 2 4.5 4 6v9h4v-9c2-1.5 4-3.5 4-6 0-2.5-2.5-5-6-5z"/>
+                        <path d="M8 22h8"/>
+                    </svg>
+                </div>
+            </div>
+            <h1 class="restaurant-name" id="restaurantName">Restaurant Name</h1>
+            <p class="restaurant-description" id="restaurantDescription">
+                Experience culinary excellence in a warm, inviting atmosphere. Our chefs craft memorable dishes using locally sourced ingredients.
+            </p>
+            <div class="hero-cta-group">
+                <button class="btn btn-primary btn-large" onclick="scrollToBooking()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    Reserve Table
+                </button>
+                <button class="btn btn-secondary btn-large" onclick="scrollToMenu()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    View Menu
+                </button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info" id="info">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Information</span>
+                <h2 class="section-title">Visit Us</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="info-title">Opening Hours</h3>
+                    <ul class="hours-list">
+                        <li class="hours-item">
+                            <span class="day">Monday - Friday</span>
+                            <span class="time">11:00 AM - 10:00 PM</span>
+                        </li>
+                        <li class="hours-item">
+                            <span class="day">Saturday</span>
+                            <span class="time">10:00 AM - 11:00 PM</span>
+                        </li>
+                        <li class="hours-item">
+                            <span class="day">Sunday</span>
+                            <span class="time">10:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="info-title">Location</h3>
+                    <p class="info-text">123 Gourmet Street<br>Culinary District<br>New York, NY 10001</p>
+                    <a href="#" class="info-link">Get Directions</a>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="info-title">Contact</h3>
+                    <a href="tel:+1234567890" class="info-phone">+1 (234) 567-890</a>
+                    <p class="info-text">hello@restaurant.com</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <div class="map-pin">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                    </div>
+                    <p class="map-text">Interactive Map</p>
+                    <p class="map-subtext">123 Gourmet Street, New York</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section class="booking" id="booking">
+        <div class="container">
+            <div class="booking-wrapper">
+                <div class="booking-content">
+                    <div class="section-header">
+                        <span class="section-tag">Reservations</span>
+                        <h2 class="section-title">Book Your Table</h2>
+                        <p class="section-description">Reserve your spot for an unforgettable dining experience. We recommend booking at least 24 hours in advance.</p>
+                    </div>
+                    <div class="booking-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <span class="feature-text">Instant Confirmation</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <span class="feature-text">Free Cancellation</span>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <span class="feature-text">Best Price Guarantee</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="booking-form-container">
+                    <form class="booking-form" id="bookingForm" novalidate>
+                        <div class="form-group">
+                            <label for="guestName" class="form-label">Full Name</label>
+                            <input type="text" id="guestName" name="guestName" class="form-input" placeholder="John Doe" required>
+                            <span class="error-message" id="guestNameError">Please enter your full name</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="guestPhone" class="form-label">Phone Number</label>
+                            <input type="tel" id="guestPhone" name="guestPhone" class="form-input" placeholder="+1 (234) 567-890" required>
+                            <span class="error-message" id="guestPhoneError">Please enter a valid phone number</span>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookingDate" class="form-label">Date</label>
+                                <input type="date" id="bookingDate" name="bookingDate" class="form-input" required>
+                                <span class="error-message" id="bookingDateError">Please select a date</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="bookingTime" class="form-label">Time</label>
+                                <select id="bookingTime" name="bookingTime" class="form-select" required>
+                                    <option value="">Select time</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="11:30">11:30 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="12:30">12:30 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="13:30">1:30 PM</option>
+                                    <option value="18:00">6:00 PM</option>
+                                    <option value="18:30">6:30 PM</option>
+                                    <option value="19:00">7:00 PM</option>
+                                    <option value="19:30">7:30 PM</option>
+                                    <option value="20:00">8:00 PM</option>
+                                    <option value="20:30">8:30 PM</option>
+                                    <option value="21:00">9:00 PM</option>
+                                </select>
+                                <span class="error-message" id="bookingTimeError">Please select a time</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="guestCount" class="form-label">Number of Guests</label>
+                            <div class="guest-selector">
+                                <button type="button" class="guest-btn" onclick="adjustGuests(-1)" aria-label="Decrease guests">-</button>
+                                <input type="number" id="guestCount" name="guestCount" class="guest-input" value="2" min="1" max="20" readonly>
+                                <button type="button" class="guest-btn" onclick="adjustGuests(1)" aria-label="Increase guests">+</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="specialRequests" class="form-label">Special Requests (Optional)</label>
+                            <textarea id="specialRequests" name="specialRequests" class="form-textarea" rows="3" placeholder="Any dietary requirements or special occasions?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full" id="submitBooking">
+                            <span class="btn-text">Confirm Reservation</span>
+                            <span class="btn-loader">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinner">
+                                    <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"></circle>
+                                </svg>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section class="menu" id="menu">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Our Menu</span>
+                <h2 class="section-title">Culinary Delights</h2>
+                <p class="section-description">Explore our carefully curated selection of dishes, crafted with passion and the finest ingredients.</p>
+            </div>
+            <div class="menu-categories">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="starters">Starters</button>
+                <button class="category-btn" data-category="mains">Mains</button>
+                <button class="category-btn" data-category="desserts">Desserts</button>
+                <button class="category-btn" data-category="drinks">Drinks</button>
+            </div>
+            <div class="menu-grid" id="menuGrid">
+                <!-- Menu items will be dynamically rendered here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Panel -->
+    <div class="cart-panel" id="cartPanel">
+        <div class="cart-overlay" onclick="closeCart()"></div>
+        <div class="cart-content">
+            <div class="cart-header">
+                <h3 class="cart-title">Your Order</h3>
+                <button class="cart-close" onclick="closeCart()" aria-label="Close cart">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be dynamically rendered here -->
+            </div>
+            <div class="cart-empty" id="cartEmpty">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M6 6h15l-1.5 9h-12L6 6z"></path>
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="18" cy="20" r="1"></circle>
+                        <path d="M6 6L5 3H2"></path>
+                    </svg>
+                </div>
+                <p class="empty-text">Your cart is empty</p>
+                <p class="empty-subtext">Add some delicious items!</p>
+            </div>
+            <div class="cart-footer" id="cartFooter">
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal">$0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (8%)</span>
+                        <span id="cartTax">$0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="cartTotal">$0.00</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-full" onclick="placeOrder()">
+                    Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Button -->
+    <button class="cart-btn" id="cartBtn" onclick="openCart()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 6h15l-1.5 9h-12L6 6z"></path>
+            <circle cx="9" cy="20" r="1"></circle>
+            <circle cx="18" cy="20" r="1"></circle>
+            <path d="M6 6L5 3H2"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+    </button>
+
+    <!-- Mobile Bottom CTA -->
+    <div class="mobile-cta" id="mobileCta">
+        <button class="btn btn-primary btn-full" onclick="scrollToBooking()">
+            Reserve Table
+        </button>
+    </div>
+
+    <!-- Booking Success Modal -->
+    <div class="modal" id="bookingSuccessModal">
+        <div class="modal-overlay" onclick="closeBookingModal()"></div>
+        <div class="modal-content">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark draw"></div>
+                </div>
+            </div>
+            <h3 class="modal-title">Reservation Confirmed!</h3>
+            <p class="modal-text">We've sent a confirmation to your phone. We look forward to welcoming you!</p>
+            <div class="booking-details" id="bookingDetails">
+                <!-- Details will be populated dynamically -->
+            </div>
+            <button class="btn btn-primary" onclick="closeBookingModal()">Done</button>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div class="modal" id="orderSuccessModal">
+        <div class="modal-overlay" onclick="closeOrderModal()"></div>
+        <div class="modal-content">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <div class="checkmark draw"></div>
+                </div>
+            </div>
+            <h3 class="modal-title">Order Placed!</h3>
+            <p class="modal-text">Your order has been received and will be ready shortly.</p>
+            <p class="modal-order-number">Order #<span id="orderNumber">12345</span></p>
+            <button class="btn btn-primary" onclick="closeOrderModal()">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-logo">Bronly</span>
+                    <p class="footer-tagline">Empowering restaurants with modern technology</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">Terms</a>
+                    <a href="#" class="footer-link">Privacy</a>
+                    <a href="#" class="footer-link">Support</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright">&copy; 2026 Bronly. All rights reserved.</p>
+                <p class="powered-by">Powered by <span>Bronly</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script src="../js/auth-effects.js"></script>
+</body>
+</html>

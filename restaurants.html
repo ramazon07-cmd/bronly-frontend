@@ -11,8 +11,24 @@
     
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/auth-effects.css">
 </head>
 <body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-logo">B</div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
     <div class="dashboard">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -148,5 +164,6 @@
     </div>
     
     <script type="module" src="js/restaurants.js"></script>
+    <script src="js/auth-effects.js"></script>
 </body>
 </html>
