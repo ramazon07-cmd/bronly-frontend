@@ -59,6 +59,7 @@ export async function initDashboard() {
     setupSidebar();
     setupHeader();
     setupEventListeners();
+    setupNotificationSystem();
     
     // Load data
     await loadDashboardData();
@@ -251,6 +252,28 @@ function setupHeader() {
             }
         }, 300));
     }
+    
+    // Setup settings button
+    const settingsBtn = document.querySelector('.header-actions .header-action:last-child');
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            window.location.href = '/settings.html';
+        });
+        settingsBtn.title = 'Settings';
+    }
+    
+    // Setup notifications button
+    const notificationsBtn = document.querySelector('.header-actions .header-action:first-child');
+    if (notificationsBtn) {
+        notificationsBtn.addEventListener('click', toggleNotificationsPanel);
+        notificationsBtn.title = 'Notifications';
+    }
+    
+    // Add click outside listener for notifications panel
+    document.addEventListener('click', handleOutsideClick);
+    
+    // Add keyboard shortcut for notifications ('n' key)
+    document.addEventListener('keydown', handleKeyboardShortcuts);
 }
 
 // Load dashboard data
@@ -624,6 +647,237 @@ async function loadChartData(period) {
 
 // Auto-initialize
 document.addEventListener('DOMContentLoaded', initDashboard);
+
+// Notification system state
+const notificationState = {
+    isOpen: false,
+    notifications: [
+        {
+            id: 1,
+            title: 'New reservation',
+            message: 'New reservation at The Golden Spoon for 4 guests',
+            timestamp: new Date(Date.now() - 10 * 60000), // 10 minutes ago
+            read: false,
+            type: 'reservation'
+        },
+        {
+            id: 2,
+            title: 'Table available',
+            message: 'Table A2 at The Golden Spoon is now available',
+            timestamp: new Date(Date.now() - 25 * 60000), // 25 minutes ago
+            read: false,
+            type: 'table'
+        },
+        {
+            id: 3,
+            title: 'System update',
+            message: 'BRONLY platform has been updated with new features',
+            timestamp: new Date(Date.now() - 120 * 60000), // 2 hours ago
+            read: true,
+            type: 'system'
+        }
+    ]
+};
+
+// Initialize notification system
+function setupNotificationSystem() {
+    // Create notification panel if it doesn't exist
+    if (!document.querySelector('#notifications-panel')) {
+        createNotificationsPanel();
+    }
+}
+
+// Create notifications panel
+function createNotificationsPanel() {
+    const panel = document.createElement('div');
+    panel.id = 'notifications-panel';
+    panel.className = 'notifications-panel';
+    panel.innerHTML = `
+        <div class="notifications-header">
+            <h3>Notifications</h3>
+            <button class="notifications-clear" id="clearAllNotifications">Clear All</button>
+        </div>
+        <div class="notifications-list" id="notificationsList"></div>
+        <div class="notifications-footer">
+            <button class="btn btn-secondary" id="viewAllNotifications">View All</button>
+        </div>
+    `;
+    document.body.appendChild(panel);
+    
+    // Initially hide the panel
+    panel.style.display = 'none';
+    
+    // Add event listeners for buttons
+    const clearButton = document.getElementById('clearAllNotifications');
+    if (clearButton) {
+        clearButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            clearAllNotifications();
+        });
+    }
+    
+    const viewAllButton = document.getElementById('viewAllNotifications');
+    if (viewAllButton) {
+        viewAllButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            viewAllNotifications();
+        });
+    }
+    
+    // Add event listener for notification items
+    const notificationsList = document.getElementById('notificationsList');
+    if (notificationsList) {
+        notificationsList.addEventListener('click', (e) => {
+            const notificationItem = e.target.closest('.notification-item');
+            if (notificationItem) {
+                const id = parseInt(notificationItem.dataset.id);
+                markAsRead(id);
+            }
+        });
+    }
+}
+
+// Toggle notifications panel
+function toggleNotificationsPanel(e) {
+    e.stopPropagation();
+    const panel = document.getElementById('notifications-panel');
+    if (panel) {
+        if (notificationState.isOpen) {
+            panel.style.display = 'none';
+            notificationState.isOpen = false;
+        } else {
+            updateNotificationsList();
+            panel.style.display = 'block';
+            positionNotificationsPanel(panel);
+            notificationState.isOpen = true;
+        }
+    }
+}
+
+// Position notifications panel near the trigger button
+function positionNotificationsPanel(panel) {
+    const triggerBtn = document.querySelector('.header-actions .header-action:first-child');
+    if (triggerBtn && panel) {
+        const rect = triggerBtn.getBoundingClientRect();
+        panel.style.position = 'fixed';
+        panel.style.top = `${rect.bottom + 5}px`;
+        panel.style.right = `${window.innerWidth - rect.right}px`;
+        panel.style.zIndex = 'var(--z-dropdown)';
+        panel.style.minWidth = '350px';
+    }
+}
+
+// Update notifications list
+function updateNotificationsList() {
+    const listElement = document.getElementById('notificationsList');
+    if (!listElement) return;
+    
+    const unreadCount = notificationState.notifications.filter(n => !n.read).length;
+    updateUnreadBadge(unreadCount);
+    
+    listElement.innerHTML = notificationState.notifications
+        .map(notification => `
+            <div class="notification-item ${notification.read ? 'read' : 'unread'}" data-id="${notification.id}">
+                <div class="notification-icon">
+                    ${getNotificationIcon(notification.type)}
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatTimeAgo(notification.timestamp)}</div>
+                </div>
+                ${!notification.read ? '<div class="notification-unread-dot"></div>' : ''}
+            </div>
+        `).join('');
+}
+
+// Get notification icon based on type
+function getNotificationIcon(type) {
+    const icons = {
+        'reservation': '📅',
+        'table': '🪑',
+        'system': '⚙️',
+        'payment': '💳',
+        'user': '👤'
+    };
+    return icons[type] || '🔔';
+}
+
+// Format time ago
+function formatTimeAgo(date) {
+    const now = new Date();
+    const timeDiff = now - date;
+    
+    const minutes = Math.floor(timeDiff / 60000);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    
+    if (days > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (minutes > 0) return `${minutes}m ago`;
+    return 'Just now';
+}
+
+// Mark notification as read
+function markAsRead(id) {
+    const notification = notificationState.notifications.find(n => n.id === id);
+    if (notification) {
+        notification.read = true;
+        updateNotificationsList();
+    }
+}
+
+// Mark all notifications as read
+function clearAllNotifications() {
+    notificationState.notifications.forEach(notification => {
+        notification.read = true;
+    });
+    updateNotificationsList();
+}
+
+// View all notifications
+function viewAllNotifications() {
+    window.location.href = '/notifications.html';
+}
+
+// Update unread badge
+function updateUnreadBadge(count) {
+    const badge = document.querySelector('.header-action:first-child .header-action-badge');
+    if (badge) {
+        if (count > 0) {
+            badge.textContent = count;
+            badge.style.display = 'block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+// Handle outside click to close notifications
+function handleOutsideClick(e) {
+    const panel = document.getElementById('notifications-panel');
+    const triggerBtn = document.querySelector('.header-actions .header-action:first-child');
+    
+    if (panel && panel.style.display === 'block' && 
+        !panel.contains(e.target) && 
+        (!triggerBtn || !triggerBtn.contains(e.target))) {
+        
+        panel.style.display = 'none';
+        notificationState.isOpen = false;
+    }
+}
+
+// Handle keyboard shortcuts
+function handleKeyboardShortcuts(e) {
+    // 'n' key to open notifications
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        const notificationsBtn = document.querySelector('.header-actions .header-action:first-child');
+        if (notificationsBtn) {
+            notificationsBtn.click();
+        }
+    }
+}
 
 export default {
     initDashboard,

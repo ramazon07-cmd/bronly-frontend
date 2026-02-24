@@ -326,9 +326,12 @@
     </div>
     
     <script type="module">
-        import { login, validateLoginForm } from './js/auth.js';
+        import { login, validateLoginForm, initAuth } from './js/auth.js';
         
         const form = document.getElementById('login-form');
+        
+        // Initialize auth state
+        initAuth();
         
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -347,7 +350,7 @@
             // Submit
             const result = await login(email, password);
             if (result.success) {
-                window.location.href = '/dashboard.html';
+                window.location.href = 'dashboard.html';
             }
         });
     </script>
