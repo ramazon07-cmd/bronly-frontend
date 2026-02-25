@@ -6,6 +6,7 @@
 import { restaurantsAPI } from './api.js';
 import { Toast, Modal, confirmDialog, createRestaurantCard, createFormGroup, createEmptyState, createPagination } from './components.js';
 import { requireAuth } from './auth.js';
+import { DataManager, renderUtils, simulateDelay, setErrorSimulation, getErrorSimulation, maybeThrowError } from './seed.js';
 
 // State
 const state = {
@@ -50,9 +51,63 @@ async function loadRestaurants(page = 1, search = '') {
     showLoading();
     
     try {
-        const response = await restaurantsAPI.getAll();
-        state.restaurants = response.results || response;
-        state.totalItems = response.count || state.restaurants.length;
+        // Simulate loading delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
+        // Load restaurants from seed data
+        let restaurants = [
+            {
+                id: 1,
+                name: 'The Golden Spoon',
+                address: '123 Gourmet Avenue, New York, NY 10001',
+                phone: '+1 (555) 123-4567',
+                description: 'Fine dining with modern American cuisine',
+                cuisine: 'American',
+                rating: 4.8,
+                table_count: 24,
+                created_at: '2024-01-15T10:00:00Z',
+                owner_id: 1
+            },
+            {
+                id: 2,
+                name: 'Bella Vista',
+                address: '456 Ocean Drive, Miami, FL 33139',
+                phone: '+1 (555) 234-5678',
+                description: 'Authentic Italian with waterfront views',
+                cuisine: 'Italian',
+                rating: 4.6,
+                table_count: 32,
+                created_at: '2024-02-20T14:30:00Z',
+                owner_id: 1
+            },
+            {
+                id: 3,
+                name: 'Sakura Sushi Bar',
+                address: '789 Cherry Blossom Lane, San Francisco, CA 94102',
+                phone: '+1 (555) 345-6789',
+                description: 'Fresh sushi and Japanese specialties',
+                cuisine: 'Japanese',
+                rating: 4.9,
+                table_count: 18,
+                created_at: '2024-03-10T09:15:00Z',
+                owner_id: 1
+            }
+        ];
+        
+        // Apply search filter
+        if (search) {
+            restaurants = restaurants.filter(restaurant => 
+                restaurant.name.toLowerCase().includes(search.toLowerCase()) ||
+                restaurant.address.toLowerCase().includes(search.toLowerCase()) ||
+                restaurant.description.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+        
+        state.restaurants = restaurants;
+        state.totalItems = restaurants.length;
         state.totalPages = Math.ceil(state.totalItems / 10) || 1;
         state.currentPage = page;
         
@@ -198,11 +253,19 @@ async function handleSubmit(e) {
     submitBtn.textContent = 'Saving...';
     
     try {
+        // Simulate delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
         if (state.editingId) {
-            await restaurantsAPI.update(state.editingId, data);
+            // For now, we'll just log the update since we're using static seed data
+            console.log('Updating restaurant:', state.editingId, data);
             Toast.success('Restaurant updated successfully');
         } else {
-            await restaurantsAPI.create(data);
+            // For now, we'll just log the addition since we're using static seed data
+            console.log('Adding restaurant:', data);
             Toast.success('Restaurant added successfully');
         }
         
@@ -223,7 +286,14 @@ async function handleDelete(restaurant) {
         `Are you sure you want to delete "${restaurant.name}"? This action cannot be undone.`,
         async () => {
             try {
-                await restaurantsAPI.delete(restaurant.id);
+                // Simulate delay
+                await simulateDelay();
+                
+                // Maybe throw error for simulation
+                maybeThrowError();
+                
+                // For now, we'll just log the deletion since we're using static seed data
+                console.log('Deleting restaurant:', restaurant.id);
                 Toast.success('Restaurant deleted');
                 loadRestaurants(state.currentPage);
             } catch (error) {
@@ -245,6 +315,62 @@ function debounce(fn, delay) {
 
 // Auto-initialize
 document.addEventListener('DOMContentLoaded', initRestaurants);
+
+// Add logout functionality
+const logoutBtn = document.querySelector('[data-logout]');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        // Import and use the logout function from auth.js
+        const { logout } = await import('./auth.js');
+        await logout();
+    });
+}
+
+// Add sidebar toggle functionality
+const sidebarToggle = document.querySelector('.sidebar-toggle');
+const sidebar = document.querySelector('.sidebar');
+const sidebarOverlay = document.querySelector('.sidebar-overlay');
+
+if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+        sidebarToggle.classList.toggle('active');
+        
+        // Toggle overlay
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.toggle('active');
+        }
+        
+        // Prevent body scroll when sidebar is open
+        document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    });
+    
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('open');
+            sidebarToggle.classList.remove('active');
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.remove('active');
+            }
+            
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Close sidebar when clicking on overlay
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarToggle.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+}
 
 export default {
     initRestaurants,

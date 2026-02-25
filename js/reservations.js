@@ -1,525 +1,455 @@
 /**
- * BRONLY - Reservations JavaScript
- * Reservation management with filtering and CRUD
+ * BRONLY - Reservations Page JavaScript
+ * Using seed data for reservations management
  */
 
-import { reservationsAPI, restaurantsAPI } from './api.js';
-import { Toast, Modal, confirmDialog, createEmptyState, createPagination } from './components.js';
+import { DataManager, renderUtils, simulateDelay, setErrorSimulation, getErrorSimulation, maybeThrowError } from './seed.js';
+import { Toast, Modal, confirmDialog, createEmptyState, createStatsCard } from './components.js';
 import { requireAuth, getUser } from './auth.js';
+import { animateNumber, formatNumber, device } from './utils.js';
 
-// State
+// Reservations state
 const state = {
     reservations: [],
-    restaurants: [],
-    selectedRestaurant: null,
+    filteredReservations: [],
     currentFilter: 'all',
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 0,
-    editingId: null,
-    isLoading: false
+    isLoading: true,
+    userRole: null
 };
 
-// Initialize
+// Initialize reservations page
 export async function initReservations() {
     if (!requireAuth()) return;
-
-    await loadRestaurants();
+    
+    // Get user role
+    const user = getUser();
+    state.userRole = user?.role || 'restaurant_owner';
+    
     setupEventListeners();
-
-    // Load all reservations initially
-    await loadReservations();
-
-    console.log('Reservations page initialized');
+    
+    // Load data
+    await loadData();
+    
+    console.log('Reservations page initialized for role:', state.userRole);
 }
 
-// Setup event listeners
-function setupEventListeners() {
-    // Add reservation button
-    const addBtn = document.querySelector('[data-add-reservation]');
-    if (addBtn) {
-        addBtn.addEventListener('click', () => openModal());
-    }
-
-    // Restaurant selector
-    const selectorBtn = document.querySelector('.restaurant-selector-btn');
-    const selector = document.querySelector('.restaurant-selector');
-
-    if (selectorBtn && selector) {
-        selectorBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selector.classList.toggle('active');
-        });
-
-        // Close when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!selector.contains(e.target)) {
-                selector.classList.remove('active');
-            }
-        });
-    }
-
-    // Filter buttons
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            state.currentFilter = btn.dataset.filter;
-            loadReservations(state.selectedRestaurant, 1);
-        });
-    });
-
-    // Search
-    const searchInput = document.querySelector('.table-search-input');
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce((e) => {
-            loadReservations(state.selectedRestaurant, 1, e.target.value);
-        }, 300));
-    }
-}
-
-// Load restaurants for selector
-async function loadRestaurants() {
+// Load data using seed data
+async function loadData() {
     try {
-        const response = await restaurantsAPI.getAll();
-        state.restaurants = response.results || response;
-        renderRestaurantSelector();
-    } catch (error) {
-        console.error('Failed to load restaurants:', error);
-        Toast.error('Failed to load restaurants');
-    }
-}
-
-// Render restaurant selector
-function renderRestaurantSelector() {
-    const container = document.querySelector('.restaurant-selector-dropdown');
-    const btn = document.querySelector('.restaurant-selector-btn span');
-
-    if (!container) return;
-
-    let html = `
-        <div class="restaurant-selector-item" data-restaurant-id="all">
-            <span>🏪</span>
-            <span>All Restaurants</span>
-        </div>
-    `;
-
-    if (state.restaurants.length) {
-        html += state.restaurants.map(r => `
-            <div class="restaurant-selector-item" data-restaurant-id="${r.id}">
-                <span>🏪</span>
-                <span>${r.name}</span>
-            </div>
-        `).join('');
-    }
-
-    container.innerHTML = html;
-
-    // Add click handlers
-    container.querySelectorAll('[data-restaurant-id]').forEach(item => {
-        item.addEventListener('click', () => {
-            const id = item.dataset.restaurantId;
-            if (id === 'all') {
-                selectRestaurant(null);
-            } else {
-                selectRestaurant(parseInt(id));
-            }
-        });
-    });
-
-    // Update button text
-    if (btn && state.selectedRestaurant) {
-        const restaurant = state.restaurants.find(r => r.id === state.selectedRestaurant);
-        if (restaurant) {
-            btn.textContent = restaurant.name;
-        }
-    }
-}
-
-// Select restaurant
-function selectRestaurant(id) {
-    state.selectedRestaurant = id;
-
-    // Update button text
-    const btn = document.querySelector('.restaurant-selector-btn span');
-    if (btn) {
-        if (id) {
-            const restaurant = state.restaurants.find(r => r.id === id);
-            btn.textContent = restaurant ? restaurant.name : 'Select Restaurant';
-        } else {
-            btn.textContent = 'All Restaurants';
-        }
-    }
-
-    // Close dropdown
-    document.querySelector('.restaurant-selector')?.classList.remove('active');
-
-    // Load reservations
-    loadReservations(id);
-}
-
-// Load reservations
-async function loadReservations(restaurantId = null, page = 1, search = '') {
-    state.isLoading = true;
-    showLoading();
-
-    try {
-        const params = {};
-        if (restaurantId) {
-            params.restaurant_id = restaurantId;
-        }
-        if (state.currentFilter !== 'all') {
-            params.status = state.currentFilter;
-        }
-
-        const response = await reservationsAPI.getAll(params);
-        state.reservations = response.results || response;
-
-        // Apply search filter if provided
-        if (search) {
-            const searchLower = search.toLowerCase();
-            state.reservations = state.reservations.filter(r =>
-                r.customer_name.toLowerCase().includes(searchLower) ||
-                r.customer_email.toLowerCase().includes(searchLower)
-            );
-        }
-
-        state.totalItems = state.reservations.length;
-        state.totalPages = Math.ceil(state.totalItems / 10) || 1;
-        state.currentPage = page;
-
-        renderReservations();
-        renderPagination();
+        state.isLoading = true;
+        
+        // Simulate loading delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
+        // Load reservations from seed data
+        state.reservations = DataManager.getReservations();
+        state.filteredReservations = [...state.reservations];
+        
+        // Render reservations
+        renderReservations(state.filteredReservations);
+        
     } catch (error) {
         console.error('Failed to load reservations:', error);
         Toast.error('Failed to load reservations');
-        renderEmptyState();
+        
+        // Show empty state
+        showEmptyState();
     } finally {
         state.isLoading = false;
-        hideLoading();
+        hideLoadingIndicators();
     }
 }
 
-// Show loading state
-function showLoading() {
+// Render reservations in table
+function renderReservations(reservations) {
     const tbody = document.querySelector('#reservations-table tbody');
     if (!tbody) return;
-
-    tbody.innerHTML = `
-        <tr>
-            <td colspan="7" style="text-align: center; padding: 40px;">
-                <div class="skeleton" style="height: 20px; width: 100%; margin-bottom: 10px;"></div>
-                <div class="skeleton" style="height: 20px; width: 90%; margin-bottom: 10px;"></div>
-                <div class="skeleton" style="height: 20px; width: 95%;"></div>
-            </td>
-        </tr>
-    `;
-}
-
-// Hide loading state
-function hideLoading() {
-    document.querySelectorAll('.skeleton').forEach(el => el.remove());
-}
-
-// Get restaurant name
-function getRestaurantName(restaurantId) {
-    const restaurant = state.restaurants.find(r => r.id === restaurantId);
-    return restaurant ? restaurant.name : 'Unknown Restaurant';
-}
-
-// Get status badge class
-function getStatusBadgeClass(status) {
-    const classes = {
-        'confirmed': 'badge-primary',
-        'seated': 'badge-success',
-        'completed': 'badge-ghost',
-        'cancelled': 'badge-error',
-        'no-show': 'badge-warning'
-    };
-    return classes[status] || 'badge-ghost';
-}
-
-// Render reservations
-function renderReservations() {
-    const tbody = document.querySelector('#reservations-table tbody');
-    if (!tbody) return;
-
-    if (!state.reservations.length) {
-        renderEmptyState();
-        return;
-    }
-
-    tbody.innerHTML = state.reservations.map(reservation => `
-        <tr>
-            <td>
-                <div class="table-cell-info">
-                    <div class="table-cell-avatar">${reservation.customer_name.charAt(0)}</div>
-                    <div class="table-cell-text">
-                        <div class="table-cell-title">${reservation.customer_name}</div>
-                        <div class="table-cell-subtitle">${reservation.customer_phone || reservation.customer_email}</div>
+    
+    if (reservations.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px;">
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;">
+                        <div style="font-size: 3rem;">📅</div>
+                        <h3>No reservations found</h3>
+                        <p style="color: var(--color-text-muted);">Try changing your filters or add a new reservation</p>
+                        <button class="btn btn-primary" data-add-reservation>Add Reservation</button>
                     </div>
-                </div>
-            </td>
-            <td>${getRestaurantName(reservation.restaurant_id)}</td>
-            <td>
-                <div class="table-cell-text">
-                    <div class="table-cell-title">${reservation.date}</div>
-                    <div class="table-cell-subtitle">${reservation.time}</div>
-                </div>
-            </td>
-            <td>${reservation.party_size} guests</td>
-            <td>Table ${reservation.table_id}</td>
-            <td>
-                <span class="badge ${getStatusBadgeClass(reservation.status)}">${reservation.status}</span>
-            </td>
-            <td>
-                <div class="table-actions-cell">
-                    <button class="table-action-btn" onclick="window.updateReservationStatus(${reservation.id}, 'seated')" title="Mark as Seated">
-                        🪑
-                    </button>
-                    <button class="table-action-btn" onclick="window.updateReservationStatus(${reservation.id}, 'completed')" title="Mark as Completed">
-                        ✅
-                    </button>
-                    <button class="table-action-btn" onclick="window.editReservation(${reservation.id})" title="Edit">
-                        ✏️
-                    </button>
-                    <button class="table-action-btn delete" onclick="window.deleteReservation(${reservation.id})" title="Delete">
-                        🗑️
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join('');
-}
-
-// Render empty state
-function renderEmptyState() {
-    const tbody = document.querySelector('#reservations-table tbody');
-    if (!tbody) return;
-
-    tbody.innerHTML = `
-        <tr>
-            <td colspan="7" style="text-align: center; padding: 60px 20px;">
-                <div style="font-size: 3rem; margin-bottom: 16px;">📅</div>
-                <h3 style="margin-bottom: 8px;">No reservations found</h3>
-                <p style="color: var(--color-text-muted); margin-bottom: 24px;">
-                    ${state.currentFilter !== 'all'
-                        ? `No ${state.currentFilter} reservations for this filter.`
-                        : 'Add your first reservation to get started.'}
-                </p>
-                <button class="btn btn-primary" onclick="window.openReservationModal()">
-                    Add Reservation
-                </button>
-            </td>
-        </tr>
-    `;
-}
-
-// Render pagination
-function renderPagination() {
-    const container = document.querySelector('.table-pagination');
-    if (!container || state.totalPages <= 1) {
-        if (container) container.innerHTML = '';
+                </td>
+            </tr>
+        `;
         return;
     }
-
-    const pagination = createPagination({
-        currentPage: state.currentPage,
-        totalPages: state.totalPages,
-        totalItems: state.totalItems,
-        onPageChange: (page) => loadReservations(state.selectedRestaurant, page)
-    });
-
-    container.innerHTML = '';
-    container.appendChild(pagination);
+    
+    tbody.innerHTML = reservations.map(reservation => {
+        const restaurant = getRestaurantById(reservation.restaurant_id);
+        const table = getTableById(reservation.table_id);
+        const customer = getCustomerById(reservation.customer_id);
+        
+        return `
+            <tr data-id="${reservation.id}">
+                <td>
+                    <div class="reservation-guest">
+                        <div class="reservation-guest-info">
+                            <strong>${customer?.first_name} ${customer?.last_name || ''}</strong>
+                            <small>${customer?.email}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>${restaurant?.name || 'Unknown'}</td>
+                <td>
+                    <div>${renderUtils.formatDate(reservation.date)}</div>
+                    <div>${renderUtils.formatTime(reservation.time)}</div>
+                </td>
+                <td>${reservation.party_size}</td>
+                <td>${table?.number || 'TBD'}</td>
+                <td>${renderUtils.formatStatus(reservation.status)}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn btn-ghost btn-sm" data-edit-reservation="${reservation.id}" title="Edit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-ghost btn-sm" data-delete-reservation="${reservation.id}" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
-// Open modal (add/edit)
-function openModal(reservation = null) {
-    state.editingId = reservation?.id || null;
-
-    const isEdit = !!reservation;
-    const title = isEdit ? 'Edit Reservation' : 'Add Reservation';
-
-    const restaurantOptions = state.restaurants.map(r =>
-        `<option value="${r.id}" ${reservation?.restaurant_id === r.id ? 'selected' : ''}>${r.name}</option>`
-    ).join('');
-
-    const content = `
-        <div class="modal-header">
-            <h3>${title}</h3>
-            <button class="modal-close">&times;</button>
-        </div>
-        <form id="reservation-form">
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Restaurant *</label>
-                <select class="form-input" name="restaurant_id" required>
-                    <option value="">Select Restaurant</option>
-                    ${restaurantOptions}
-                </select>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Guest Name *</label>
-                <input type="text" class="form-input" name="customer_name" required
-                    value="${reservation?.customer_name || ''}" placeholder="Guest name">
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" name="customer_email"
-                    value="${reservation?.customer_email || ''}" placeholder="guest@example.com">
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Phone</label>
-                <input type="tel" class="form-input" name="customer_phone"
-                    value="${reservation?.customer_phone || ''}" placeholder="+1 (555) 000-0000">
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-                <div>
-                    <label class="form-label">Date *</label>
-                    <input type="date" class="form-input" name="date" required
-                        value="${reservation?.date || new Date().toISOString().split('T')[0]}">
-                </div>
-                <div>
-                    <label class="form-label">Time *</label>
-                    <input type="time" class="form-input" name="time" required
-                        value="${reservation?.time || '19:00'}">
-                </div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Party Size *</label>
-                <input type="number" class="form-input" name="party_size" required min="1" max="50"
-                    value="${reservation?.party_size || '2'}" placeholder="Number of guests">
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Table ID</label>
-                <input type="number" class="form-input" name="table_id"
-                    value="${reservation?.table_id || ''}" placeholder="Table number">
-            </div>
-            <div style="margin-bottom: 20px;">
-                <label class="form-label">Status</label>
-                <select class="form-input" name="status">
-                    <option value="confirmed" ${reservation?.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-                    <option value="seated" ${reservation?.status === 'seated' ? 'selected' : ''}>Seated</option>
-                    <option value="completed" ${reservation?.status === 'completed' ? 'selected' : ''}>Completed</option>
-                    <option value="cancelled" ${reservation?.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                </select>
-            </div>
-            <div style="margin-bottom: 24px;">
-                <label class="form-label">Special Requests</label>
-                <textarea class="form-input" name="special_requests" rows="2" placeholder="Any special requests or notes...">${reservation?.special_requests || ''}</textarea>
-            </div>
-            <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
-                <button type="submit" class="btn btn-primary">${isEdit ? 'Save Changes' : 'Add Reservation'}</button>
-            </div>
-        </form>
-    `;
-
-    const modal = Modal.open(content);
-
-    // Form submission
-    const form = modal.querySelector('#reservation-form');
-    form.addEventListener('submit', handleSubmit);
-}
-
-// Handle form submit
-async function handleSubmit(e) {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-
-    // Convert numeric fields
-    data.restaurant_id = parseInt(data.restaurant_id);
-    data.table_id = data.table_id ? parseInt(data.table_id) : null;
-    data.party_size = parseInt(data.party_size);
-
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Saving...';
-
-    try {
-        if (state.editingId) {
-            await reservationsAPI.update(state.editingId, data);
-            Toast.success('Reservation updated successfully');
-        } else {
-            await reservationsAPI.create(data);
-            Toast.success('Reservation added successfully');
+// Get restaurant by ID
+function getRestaurantById(id) {
+    const restaurants = [
+        {
+            id: 1,
+            name: 'The Golden Spoon',
+            address: '123 Gourmet Avenue, New York, NY 10001',
+            phone: '+1 (555) 123-4567',
+            description: 'Fine dining with modern American cuisine',
+            cuisine: 'American',
+            rating: 4.8,
+            table_count: 24,
+            created_at: '2024-01-15T10:00:00Z',
+            owner_id: 1
+        },
+        {
+            id: 2,
+            name: 'Bella Vista',
+            address: '456 Ocean Drive, Miami, FL 33139',
+            phone: '+1 (555) 234-5678',
+            description: 'Authentic Italian with waterfront views',
+            cuisine: 'Italian',
+            rating: 4.6,
+            table_count: 32,
+            created_at: '2024-02-20T14:30:00Z',
+            owner_id: 1
+        },
+        {
+            id: 3,
+            name: 'Sakura Sushi Bar',
+            address: '789 Cherry Blossom Lane, San Francisco, CA 94102',
+            phone: '+1 (555) 345-6789',
+            description: 'Fresh sushi and Japanese specialties',
+            cuisine: 'Japanese',
+            rating: 4.9,
+            table_count: 18,
+            created_at: '2024-03-10T09:15:00Z',
+            owner_id: 1
         }
-
-        Modal.close();
-        loadReservations(state.selectedRestaurant, state.currentPage);
-    } catch (error) {
-        console.error('Failed to save reservation:', error);
-        Toast.error(error.message || 'Failed to save reservation');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    }
+    ];
+    return restaurants.find(r => r.id === parseInt(id));
 }
 
-// Update reservation status
-async function updateStatus(id, status) {
+// Get table by ID
+function getTableById(id) {
+    return DataManager.getTableById(id);
+}
+
+// Get customer by ID
+function getCustomerById(id) {
+    return DataManager.getCustomerById(id);
+}
+
+// Filter reservations
+function filterReservations(filter) {
+    state.currentFilter = filter;
+    
+    if (filter === 'all') {
+        state.filteredReservations = [...state.reservations];
+    } else {
+        state.filteredReservations = state.reservations.filter(res => res.status === filter);
+    }
+    
+    renderReservations(state.filteredReservations);
+}
+
+// Add new reservation
+async function addReservation(reservationData) {
     try {
-        await reservationsAPI.update(id, { status });
-        Toast.success(`Reservation marked as ${status}`);
-        loadReservations(state.selectedRestaurant, state.currentPage);
+        // Simulate delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
+        // Add reservation
+        const newReservation = DataManager.addReservation(reservationData);
+        
+        // Update state
+        state.reservations = DataManager.getReservations();
+        filterReservations(state.currentFilter);
+        
+        Toast.success('Reservation added successfully');
+        
+        return newReservation;
     } catch (error) {
-        console.error('Failed to update status:', error);
-        Toast.error('Failed to update status');
+        console.error('Failed to add reservation:', error);
+        Toast.error('Failed to add reservation');
+        return null;
     }
 }
 
-// Edit reservation
-async function editReservation(id) {
-    const reservation = state.reservations.find(r => r.id === id);
-    if (reservation) {
-        openModal(reservation);
+// Update reservation
+async function updateReservation(id, updates) {
+    try {
+        // Simulate delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
+        // Update reservation
+        const updatedReservation = DataManager.updateReservation(id, updates);
+        
+        if (updatedReservation) {
+            // Update state
+            state.reservations = DataManager.getReservations();
+            filterReservations(state.currentFilter);
+            
+            Toast.success('Reservation updated successfully');
+            return updatedReservation;
+        } else {
+            throw new Error('Reservation not found');
+        }
+    } catch (error) {
+        console.error('Failed to update reservation:', error);
+        Toast.error('Failed to update reservation');
+        return null;
     }
 }
 
 // Delete reservation
 async function deleteReservation(id) {
-    confirmDialog(
-        'Are you sure you want to delete this reservation? This action cannot be undone.',
-        async () => {
-            try {
-                await reservationsAPI.delete(id);
-                Toast.success('Reservation deleted');
-                loadReservations(state.selectedRestaurant, state.currentPage);
-            } catch (error) {
-                console.error('Failed to delete reservation:', error);
-                Toast.error('Failed to delete reservation');
-            }
+    try {
+        // Confirm deletion
+        const confirmed = await confirmDialog('Are you sure you want to delete this reservation?');
+        if (!confirmed) return false;
+        
+        // Simulate delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
+        // Delete reservation
+        const deleted = DataManager.deleteReservation(id);
+        
+        if (deleted) {
+            // Update state
+            state.reservations = DataManager.getReservations();
+            filterReservations(state.currentFilter);
+            
+            Toast.success('Reservation deleted successfully');
+            return true;
+        } else {
+            throw new Error('Reservation not found');
         }
-    );
+    } catch (error) {
+        console.error('Failed to delete reservation:', error);
+        Toast.error('Failed to delete reservation');
+        return false;
+    }
 }
 
-// Utility debounce
-function debounce(fn, delay) {
-    let timeout;
-    return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn.apply(this, args), delay);
-    };
+// Show empty state
+function showEmptyState() {
+    const tbody = document.querySelector('#reservations-table tbody');
+    if (tbody) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7">
+                    <div class="empty-state">
+                        <div style="font-size: 3rem; margin-bottom: 16px;">📋</div>
+                        <h3>No Reservations</h3>
+                        <p>There are currently no reservations to display.</p>
+                        <button class="btn btn-primary" data-add-reservation>Add Reservation</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
 }
 
-// Expose functions to window for inline onclick handlers
-window.updateReservationStatus = updateStatus;
-window.editReservation = editReservation;
-window.deleteReservation = deleteReservation;
-window.openReservationModal = openModal;
+// Hide loading indicators
+function hideLoadingIndicators() {
+    // Hide skeleton loaders if present
+    document.querySelectorAll('.skeleton').forEach(el => el.remove());
+}
 
-// Auto-initialize
-document.addEventListener('DOMContentLoaded', initReservations);
+// Setup event listeners
+function setupEventListeners() {
+    // Filter buttons
+    document.querySelectorAll('[data-filter]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            // Update active state
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            // Filter reservations
+            const filter = button.dataset.filter;
+            filterReservations(filter);
+        });
+    });
+    
+    // Add reservation button
+    document.querySelector('[data-add-reservation]')?.addEventListener('click', () => {
+        openReservationModal();
+    });
+    
+    // Edit reservation buttons (using event delegation)
+    document.addEventListener('click', (e) => {
+        const editBtn = e.target.closest('[data-edit-reservation]');
+        if (editBtn) {
+            const id = editBtn.dataset.editReservation;
+            openReservationModal(DataManager.getReservationById(parseInt(id)));
+        }
+        
+        const deleteBtn = e.target.closest('[data-delete-reservation]');
+        if (deleteBtn) {
+            const id = deleteBtn.dataset.deleteReservation;
+            deleteReservation(parseInt(id));
+        }
+    });
+    
+    // Search functionality
+    const searchInput = document.querySelector('.table-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (!searchTerm) {
+                state.filteredReservations = state.currentFilter === 'all' 
+                    ? [...state.reservations] 
+                    : state.reservations.filter(res => res.status === state.currentFilter);
+            } else {
+                state.filteredReservations = state.reservations.filter(res => {
+                    const customer = getCustomerById(res.customer_id);
+                    const restaurant = getRestaurantById(res.restaurant_id);
+                    
+                    return (
+                        customer?.first_name.toLowerCase().includes(searchTerm) ||
+                        customer?.last_name.toLowerCase().includes(searchTerm) ||
+                        customer?.email.toLowerCase().includes(searchTerm) ||
+                        restaurant?.name.toLowerCase().includes(searchTerm) ||
+                        res.party_size.toString().includes(searchTerm)
+                    );
+                });
+            }
+            
+            renderReservations(state.filteredReservations);
+        });
+    }
+}
 
+// Open reservation modal (simplified version)
+function openReservationModal(reservation = null) {
+    // Create a simple modal for adding/editing reservations
+    const isEdit = !!reservation;
+    const title = isEdit ? 'Edit Reservation' : 'Add Reservation';
+    
+    // For simplicity, we'll just log this action
+    console.log(isEdit ? 'Editing reservation:' : 'Adding new reservation', reservation);
+    
+    // In a real implementation, this would open a modal form
+    Toast.info(isEdit ? 'Edit functionality would open here' : 'Add reservation form would open here');
+}
+
+// Export default functions
 export default {
     initReservations,
-    loadReservations,
-    selectRestaurant,
-    openModal,
-    updateStatus,
-    editReservation,
+    loadData,
+    renderReservations,
+    filterReservations,
+    addReservation,
+    updateReservation,
     deleteReservation
 };
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initReservations);
+
+// Add logout functionality
+const logoutBtn = document.querySelector('[data-logout]');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        // Import and use the logout function from auth.js
+        const { logout } = await import('./auth.js');
+        await logout();
+    });
+}
+
+// Add sidebar toggle functionality
+const sidebarToggle = document.querySelector('.sidebar-toggle');
+const sidebar = document.querySelector('.sidebar');
+const sidebarOverlay = document.querySelector('.sidebar-overlay');
+
+if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        sidebar.classList.toggle('open');
+        sidebarToggle.classList.toggle('active');
+        
+        // Toggle overlay
+        if (sidebarOverlay) {
+            sidebarOverlay.classList.toggle('active');
+        }
+        
+        // Prevent body scroll when sidebar is open
+        document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+    });
+    
+    // Close sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+            sidebar.classList.remove('open');
+            sidebarToggle.classList.remove('active');
+            
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.remove('active');
+            }
+            
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Close sidebar when clicking on overlay
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarToggle.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+}

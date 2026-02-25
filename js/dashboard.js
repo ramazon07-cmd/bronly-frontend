@@ -7,6 +7,7 @@ import { authAPI, dashboardAPI, restaurantsAPI } from './api.js';
 import { Toast, Modal, confirmDialog, createEmptyState, createStatsCard } from './components.js';
 import { requireAuth, getUser } from './auth.js';
 import { animateNumber, formatNumber, device } from './utils.js';
+import { DataManager, renderUtils, simulateDelay, setErrorSimulation, getErrorSimulation, maybeThrowError } from './seed.js';
 
 // Dashboard state
 const state = {
@@ -184,18 +185,46 @@ function setupSidebar() {
     // Mobile sidebar toggle
     const sidebarToggle = document.querySelector('.sidebar-toggle');
     const sidebar = document.querySelector('.sidebar');
+    const sidebarOverlay = document.querySelector('.sidebar-overlay');
     
     if (sidebarToggle && sidebar) {
-        sidebarToggle.addEventListener('click', () => {
+        sidebarToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             sidebar.classList.toggle('open');
+            sidebarToggle.classList.toggle('active');
+            
+            // Toggle overlay
+            if (sidebarOverlay) {
+                sidebarOverlay.classList.toggle('active');
+            }
+            
+            // Prevent body scroll when sidebar is open
+            document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
         });
         
         // Close sidebar when clicking outside
         document.addEventListener('click', (e) => {
             if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
                 sidebar.classList.remove('open');
+                sidebarToggle.classList.remove('active');
+                
+                if (sidebarOverlay) {
+                    sidebarOverlay.classList.remove('active');
+                }
+                
+                document.body.style.overflow = '';
             }
         });
+        
+        // Close sidebar when clicking on overlay
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                sidebarToggle.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+        }
     }
     
     // Setup logout
@@ -279,20 +308,82 @@ function setupHeader() {
 // Load dashboard data
 async function loadDashboardData() {
     try {
-        // Load stats
-        const statsData = await dashboardAPI.getOverview();
+        // Simulate loading delay
+        await simulateDelay();
+        
+        // Maybe throw error for simulation
+        maybeThrowError();
+        
+        // Load stats (using mock data)
+        const statsData = {
+            restaurant_count: 3,
+            restaurant_growth: 12,
+            table_count: 42,
+            table_growth: 8,
+            today_reservations: DataManager.getReservations().length,
+            today_revenue: 3840,
+            revenue_growth: 15,
+            occupancy_rate: 78,
+            total_guests_served: 156,
+            average_party_size: 3.2
+        };
         state.stats = statsData;
         renderStats(statsData);
         
-        // Load restaurants
-        const restaurantsData = await restaurantsAPI.getAll();
-        state.restaurants = restaurantsData.results || restaurantsData;
+        // Load restaurants (using mock data)
+        const restaurantsData = [
+            {
+                id: 1,
+                name: 'The Golden Spoon',
+                address: '123 Gourmet Avenue, New York, NY 10001',
+                phone: '+1 (555) 123-4567',
+                description: 'Fine dining with modern American cuisine',
+                cuisine: 'American',
+                rating: 4.8,
+                table_count: 24,
+                created_at: '2024-01-15T10:00:00Z',
+                owner_id: 1
+            },
+            {
+                id: 2,
+                name: 'Bella Vista',
+                address: '456 Ocean Drive, Miami, FL 33139',
+                phone: '+1 (555) 234-5678',
+                description: 'Authentic Italian with waterfront views',
+                cuisine: 'Italian',
+                rating: 4.6,
+                table_count: 32,
+                created_at: '2024-02-20T14:30:00Z',
+                owner_id: 1
+            },
+            {
+                id: 3,
+                name: 'Sakura Sushi Bar',
+                address: '789 Cherry Blossom Lane, San Francisco, CA 94102',
+                phone: '+1 (555) 345-6789',
+                description: 'Fresh sushi and Japanese specialties',
+                cuisine: 'Japanese',
+                rating: 4.9,
+                table_count: 18,
+                created_at: '2024-03-10T09:15:00Z',
+                owner_id: 1
+            }
+        ];
+        state.restaurants = restaurantsData;
         renderRecentRestaurants(state.restaurants.slice(0, 5));
         
-        // Load activity
-        const activityData = await dashboardAPI.getRecentActivity();
-        state.activities = activityData.results || activityData;
+        // Load activity from notifications (using seed data)
+        const notifications = DataManager.getNotifications().slice(0, 5);
+        state.activities = notifications.map(notification => ({
+            id: notification.id,
+            type: notification.type,
+            description: notification.message,
+            created_at: notification.timestamp
+        }));
         renderActivity(state.activities);
+        
+        // Render recent reservations using seed data
+        renderRecentReservations();
         
     } catch (error) {
         console.error('Failed to load dashboard data:', error);
@@ -417,6 +508,98 @@ function renderActivity(activities) {
             </div>
         </div>
     `).join('');
+}
+
+// Render recent reservations
+function renderRecentReservations() {
+    const reservations = DataManager.getReservations().slice(0, 5); // Get latest 5 reservations
+    const container = document.querySelector('.recent-reservations-list');
+    
+    if (!container) return;
+    
+    if (!reservations.length) {
+        container.innerHTML = `
+            <div class="empty-state" style="padding: 24px; text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 12px;">📅</div>
+                <p style="color: var(--color-text-muted);">No recent reservations</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = reservations.map(reservation => {
+        const customer = DataManager.getCustomerById(reservation.customer_id);
+        const restaurant = getRestaurantById(reservation.restaurant_id);
+        const table = DataManager.getTableById(reservation.table_id);
+        
+        return `
+            <div class="reservation-item">
+                <div class="reservation-info">
+                    <div class="reservation-guest">
+                        <strong>${customer ? customer.first_name + ' ' + customer.last_name : 'Unknown Customer'}</strong>
+                        <small>${customer ? customer.email : 'N/A'}</small>
+                    </div>
+                    <div class="reservation-details">
+                        <div class="reservation-meta">
+                            <span class="reservation-date">${renderUtils.formatDate(reservation.date)}</span>
+                            <span class="reservation-time">${renderUtils.formatTime(reservation.time)}</span>
+                            <span class="reservation-party">${reservation.party_size} guests</span>
+                        </div>
+                        <div class="reservation-location">
+                            <span class="restaurant-name">${restaurant ? restaurant.name : 'Unknown'}</span>
+                            <span class="table-number">Table ${table ? table.number : 'TBD'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reservation-status">
+                    ${renderUtils.formatStatus(reservation.status)}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// Helper function to get restaurant by ID
+function getRestaurantById(id) {
+    const restaurants = [
+        {
+            id: 1,
+            name: 'The Golden Spoon',
+            address: '123 Gourmet Avenue, New York, NY 10001',
+            phone: '+1 (555) 123-4567',
+            description: 'Fine dining with modern American cuisine',
+            cuisine: 'American',
+            rating: 4.8,
+            table_count: 24,
+            created_at: '2024-01-15T10:00:00Z',
+            owner_id: 1
+        },
+        {
+            id: 2,
+            name: 'Bella Vista',
+            address: '456 Ocean Drive, Miami, FL 33139',
+            phone: '+1 (555) 234-5678',
+            description: 'Authentic Italian with waterfront views',
+            cuisine: 'Italian',
+            rating: 4.6,
+            table_count: 32,
+            created_at: '2024-02-20T14:30:00Z',
+            owner_id: 1
+        },
+        {
+            id: 3,
+            name: 'Sakura Sushi Bar',
+            address: '789 Cherry Blossom Lane, San Francisco, CA 94102',
+            phone: '+1 (555) 345-6789',
+            description: 'Fresh sushi and Japanese specialties',
+            cuisine: 'Japanese',
+            rating: 4.9,
+            table_count: 18,
+            created_at: '2024-03-10T09:15:00Z',
+            owner_id: 1
+        }
+    ];
+    return restaurants.find(r => r.id === parseInt(id));
 }
 
 // Get activity icon
