@@ -200,6 +200,44 @@
                         <h2 class="section-title">Book Your Table</h2>
                         <p class="section-description">Reserve your spot for an unforgettable dining experience. We recommend booking at least 24 hours in advance.</p>
                     </div>
+                    
+                    <!-- Deposit Summary Card -->
+                    <div class="deposit-summary-card">
+                        <div class="deposit-header">
+                            <div class="shield-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                <span>Secure Payment</span>
+                            </div>
+                            <div class="no-fees-badge">
+                                <span>No hidden fees</span>
+                            </div>
+                        </div>
+                        <div class="deposit-amount">
+                            <h3>Deposit Required: <span id="depositAmount">$20.00</span></h3>
+                            <p>If you arrive, your deposit will be applied to your final bill.</p>
+                            <p>If you don't show up, 1/3 of your deposit ($6.67) is retained by the restaurant and 2/3 ($13.33) is refunded.</p>
+                        </div>
+                        <div class="faq-collapse">
+                            <button class="faq-toggle" type="button">
+                                <span>How does the deposit policy work?</span>
+                                <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+                            <div class="faq-content" id="depositFaqContent">
+                                <p>Our deposit system helps reduce no-shows while being fair to both guests and restaurants:</p>
+                                <ul>
+                                    <li>When you book, you pay a small deposit to confirm your reservation</li>
+                                    <li>If you arrive for your reservation, the deposit is applied to your final bill</li>
+                                    <li>If you don't arrive, 1/3 of the deposit is retained by the restaurant to compensate for the lost opportunity</li>
+                                    <li>The remaining 2/3 of the deposit is automatically refunded to you</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="booking-features">
                         <div class="feature-item">
                             <div class="feature-icon">
@@ -279,7 +317,7 @@
                             <textarea id="specialRequests" name="specialRequests" class="form-textarea" rows="3" placeholder="Any dietary requirements or special occasions?"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary btn-full" id="submitBooking">
-                            <span class="btn-text">Confirm Reservation</span>
+                            <span class="btn-text">Pay Deposit & Reserve</span>
                             <span class="btn-loader">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinner">
                                     <circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"></circle>
@@ -412,6 +450,39 @@
             <p class="modal-text">Your order has been received and will be ready shortly.</p>
             <p class="modal-order-number">Order #<span id="orderNumber">12345</span></p>
             <button class="btn btn-primary" onclick="closeOrderModal()">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Cancellation Policy Modal -->
+    <div class="modal" id="cancellationPolicyModal">
+        <div class="modal-overlay" onclick="closeCancellationModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Reservation Deposit Policy</h3>
+                <button class="modal-close" onclick="closeCancellationModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Our deposit system ensures commitment while being fair to both guests and restaurants:</p>
+                <h4>When you make a reservation:</h4>
+                <ul>
+                    <li>You pay a small deposit to confirm your booking</li>
+                    <li>This helps reduce no-shows that affect restaurant operations</li>
+                </ul>
+                <h4>If you arrive for your reservation:</h4>
+                <ul>
+                    <li>Your deposit will be applied to your final bill</li>
+                    <li>You'll only pay the remaining balance</li>
+                </ul>
+                <h4>If you don't arrive:</h4>
+                <ul>
+                    <li>The restaurant retains 1/3 of your deposit as compensation for the lost opportunity</li>
+                    <li>The remaining 2/3 of your deposit is automatically refunded to you</li>
+                    <li>This policy helps restaurants recover costs while being fair to guests</li>
+                </ul>
+                <h4>Refund Timeline:</h4>
+                <p>Unused deposits are refunded within 5-10 business days after the reservation date.</p>
+            </div>
+            <button class="btn btn-primary" onclick="closeCancellationModal()">Close</button>
         </div>
     </div>
 

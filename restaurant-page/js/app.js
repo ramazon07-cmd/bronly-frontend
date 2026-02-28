@@ -634,6 +634,73 @@ function validateBookingForm() {
     return isValid;
 }
 
+// ========================================
+// DEPOSIT CALCULATION LOGIC
+// ========================================
+
+/**
+ * Calculate deposit amount
+ * @param {number} guestCount - Number of guests
+ * @param {string} bookingDate - Booking date
+ * @param {string} bookingTime - Booking time
+ * @returns {number} Deposit amount
+ */
+function calculateDeposit(guestCount, bookingDate, bookingTime) {
+    // Base deposit is $20 per person
+    let baseDeposit = guestCount * 20;
+    
+    // Peak hours surcharge (weekends, dinner hours)
+    const date = new Date(bookingDate);
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 6 = Saturday
+    const hour = parseInt(bookingTime.split(':')[0]);
+    
+    // Weekend (Saturday or Sunday) or prime dinner time (5PM-9PM)
+    if (dayOfWeek === 0 || dayOfWeek === 6 || (hour >= 17 && hour <= 21)) {
+        baseDeposit *= 1.5; // 50% surcharge during peak times
+    }
+    
+    // Cap the deposit at $100 per reservation
+    return Math.min(baseDeposit, 100);
+}
+
+/**
+ * Calculate refund amounts
+ * @param {number} deposit - Total deposit amount
+ * @returns {object} Object containing restaurant share and refund amount
+ */
+function calculateRefunds(deposit) {
+    const restaurantShare = deposit / 3; // 1/3 goes to restaurant
+    const refundAmount = deposit * 2/3;  // 2/3 gets refunded
+    
+    return {
+        restaurantShare: parseFloat(restaurantShare.toFixed(2)),
+        refundAmount: parseFloat(refundAmount.toFixed(2))
+    };
+}
+
+/**
+ * Update deposit summary display
+ */
+function updateDepositSummary() {
+    const guestCount = parseInt(document.getElementById('guestCount').value) || 2;
+    const bookingDate = document.getElementById('bookingDate').value;
+    const bookingTime = document.getElementById('bookingTime').value;
+    
+    if (bookingDate && bookingTime) {
+        const depositAmount = calculateDeposit(guestCount, bookingDate, bookingTime);
+        const refunds = calculateRefunds(depositAmount);
+        
+        document.getElementById('depositAmount').textContent = `$${depositAmount.toFixed(2)}`;
+        
+        // Update the deposit summary card text
+        const depositAmountElements = document.querySelectorAll('.deposit-amount p');
+        if (depositAmountElements.length > 1) {
+            depositAmountElements[0].innerHTML = `If you arrive, your deposit will be applied to your final bill.`;
+            depositAmountElements[1].innerHTML = `If you don't show up, 1/3 of your deposit ($${refunds.restaurantShare.toFixed(2)}) is retained by the restaurant and 2/3 ($${refunds.refundAmount.toFixed(2)}) is refunded.`;
+        }
+    }
+}
+
 /**
  * Handle booking form submission
  */
@@ -649,16 +716,23 @@ function handleBookingSubmit(e) {
     submitBtn.disabled = true;
     
     // Collect form data
+    const guestCount = parseInt(document.getElementById('guestCount').value);
+    const bookingDate = document.getElementById('bookingDate').value;
+    const bookingTime = document.getElementById('bookingTime').value;
+    
     const formData = {
         name: document.getElementById('guestName').value,
         phone: document.getElementById('guestPhone').value,
-        date: document.getElementById('bookingDate').value,
-        time: document.getElementById('bookingTime').value,
-        guests: document.getElementById('guestCount').value,
-        specialRequests: document.getElementById('specialRequests').value
+        date: bookingDate,
+        time: bookingTime,
+        guests: guestCount,
+        specialRequests: document.getElementById('specialRequests').value,
+        depositAmount: calculateDeposit(guestCount, bookingDate, bookingTime),
+        depositPaymentIntent: null // Placeholder for actual payment intent
     };
     
-    // Simulate API call
+    // In a real implementation, you would process the deposit payment here
+    // For demo purposes, we'll simulate the payment processing
     setTimeout(() => {
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
@@ -669,6 +743,9 @@ function handleBookingSubmit(e) {
         // Reset form
         document.getElementById('bookingForm').reset();
         document.getElementById('guestCount').value = '2';
+        
+        // Update deposit summary after form reset
+        updateDepositSummary();
     }, 1500);
 }
 
@@ -743,6 +820,13 @@ function showBookingSuccessModal(bookingData) {
         <div class="booking-detail-row">
             <span class="booking-detail-label">Guests</span>
             <span class="booking-detail-value">${bookingData.guests}</span>
+        </div>
+        <div class="booking-detail-row">
+            <span class="booking-detail-label">Deposit Paid</span>
+            <span class="booking-detail-value">$${bookingData.depositAmount.toFixed(2)}</span>
+        </div>
+        <div class="booking-detail-note">
+            <small>If you arrive, this deposit will be applied to your final bill. If you don't show up, 1/3 will be retained by the restaurant and 2/3 refunded.</small>
         </div>
     `;
     
@@ -1049,4 +1133,81 @@ function formatDate(dateString) {
         month: 'long',
         day: 'numeric'
     });
+}
+
+// ========================================
+// DEPOSIT SYSTEM UI INTERACTIONS
+// ========================================
+
+/**
+ * Toggle FAQ content
+ */
+function toggleFaqContent() {
+    const faqContent = document.getElementById('depositFaqContent');
+    const faqToggle = document.querySelector('.faq-toggle');
+    
+    if (faqContent.style.display === 'block') {
+        faqContent.style.display = 'none';
+        faqToggle.classList.remove('active');
+    } else {
+        faqContent.style.display = 'block';
+        faqToggle.classList.add('active');
+    }
+}
+
+/**
+ * Close cancellation policy modal
+ */
+function closeCancellationModal() {
+    const modal = document.getElementById('cancellationPolicyModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+/**
+ * Initialize deposit system event listeners
+ */
+function initializeDepositSystem() {
+    // Add event listener for guest count changes
+    const guestCountInput = document.getElementById('guestCount');
+    if (guestCountInput) {
+        guestCountInput.addEventListener('change', updateDepositSummary);
+    }
+    
+    // Add event listeners for date/time changes
+    const bookingDate = document.getElementById('bookingDate');
+    const bookingTime = document.getElementById('bookingTime');
+    
+    if (bookingDate) {
+        bookingDate.addEventListener('change', updateDepositSummary);
+    }
+    
+    if (bookingTime) {
+        bookingTime.addEventListener('change', updateDepositSummary);
+    }
+    
+    // Add event listener for FAQ toggle
+    const faqToggle = document.querySelector('.faq-toggle');
+    if (faqToggle) {
+        faqToggle.addEventListener('click', toggleFaqContent);
+    }
+    
+    // Initialize deposit summary on page load
+    updateDepositSummary();
+}
+
+// ========================================
+// UPDATE INITIALIZATION
+// ========================================
+
+/**
+ * Main initialization function
+ */
+function init() {
+    initializeContent();
+    initializeEventListeners();
+    initializeDepositSystem(); // Added deposit system initialization
+    
+    // Hide loading overlay after initialization
+    window.addEventListener('load', hideLoadingOverlay);
 }

@@ -1823,6 +1823,134 @@ section {
 }
 
 /* ========================================
+   DEPOSIT SUMMARY CARD STYLES
+   ======================================== */
+.deposit-summary-card {
+    background: var(--color-glass);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    backdrop-filter: blur(10px);
+}
+
+.deposit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.shield-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.shield-icon svg {
+    width: 20px;
+    height: 20px;
+    color: var(--color-success);
+}
+
+.no-fees-badge {
+    background: var(--color-success);
+    color: #000;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+}
+
+.deposit-amount {
+    margin-bottom: var(--space-4);
+}
+
+.deposit-amount h3 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-2);
+}
+
+.deposit-amount p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-1);
+    line-height: var(--line-height-relaxed);
+}
+
+.faq-collapse {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4);
+}
+
+.faq-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: var(--space-3) 0;
+    background: none;
+    border: none;
+    text-align: left;
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.faq-toggle:hover {
+    color: var(--color-primary);
+}
+
+.faq-toggle.active {
+    color: var(--color-primary);
+}
+
+.faq-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform var(--transition-fast);
+}
+
+.faq-toggle.active .faq-arrow {
+    transform: rotate(180deg);
+}
+
+.faq-content {
+    display: none;
+    padding: var(--space-4) 0;
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+}
+
+.faq-content ul {
+    margin-top: var(--space-2);
+    padding-left: var(--space-4);
+}
+
+.faq-content li {
+    margin-bottom: var(--space-2);
+}
+
+.booking-detail-note {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px dashed var(--color-border);
+}
+
+.booking-detail-note small {
+    color: var(--color-text-tertiary);
+    font-size: var(--font-size-xs);
+    display: block;
+    line-height: var(--line-height-relaxed);
+}
+
+/* ========================================
    PRINT STYLES
    ======================================== */
 @media print {
@@ -1833,7 +1961,8 @@ section {
     .mobile-menu,
     .scroll-indicator,
     .page-loader,
-    .custom-cursor {
+    .custom-cursor,
+    .deposit-summary-card {
         display: none !important;
     }
     
